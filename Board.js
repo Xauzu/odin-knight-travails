@@ -1,14 +1,14 @@
 module.exports = class Board {
-    constructor() {
-        this._grid = this.createGrid();
+    constructor(fill = '') {
+        this._grid = this.createGrid(fill);
     }
 
     get grid() { return this._grid; }
 
-    createGrid() {
+    createGrid(fill) {
         const newGrid = Array(8);
         for (let i = 0; i < 8; i++)
-            newGrid[i] = Array(8).fill(9);
+            newGrid[i] = Array(8).fill(fill);
         return newGrid;
     }
 
