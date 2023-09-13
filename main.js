@@ -45,14 +45,14 @@ function trimSteps(board, x, y) {
 }
 
 // Way overboard for what was needed
-function knightMoves(start, end) {
+function knightMoves(start, end, displayGrid) {
+    console.log(' --- ')
     const board = new Board('');
 
-    const startSteps = knightDisplacements.map((disp, index) => {
-        return [start[0] + disp[0], start[1] + disp[1]];
-    });
+    const startSteps = trimSteps(board, start[0], start[1]);
 
     const root = new Tree(start, startSteps);
+    board.setPath(start[0], start[1], 'BEG');
 
     const q = new Queue;
     q.enqueue(root);
@@ -72,6 +72,8 @@ function knightMoves(start, end) {
                 const knightSteps = trimSteps(board, branchX, branchY);
 
                 const branch = new Tree([branchX, branchY], knightSteps, item.totalMoves + 1);
+                if (board.getPath(branchX, branchY) === '')
+                    board.setPath(branchX, branchY, [x,y]);
                 newMoves.push(branch);
                 q.enqueue(branch);
             }
@@ -80,13 +82,17 @@ function knightMoves(start, end) {
         }
     }
 
+    if (displayGrid)
+        board.printGrid();
+
     const stepsNeeded = board.getValue(...end);
-    console.log(`Steps required for (${end[0]}, ${end[1]}):`, stepsNeeded);
+    console.log(`You made it in ${stepsNeeded} moves! Here's your path:`);
 
-    board.printGrid();
-
-    let moves = '';
-    return moves;
+    let moves = board.buildPath(start, end);
+    console.log(moves);
 }
 
-knightMoves([3,3], [7,7]);
+knightMoves([0,0], [1,2]);
+knightMoves([0,0], [3,3], 1);
+knightMoves([3,3], [0,0], 1);
+knightMoves([3,3], [4,3], 1);
